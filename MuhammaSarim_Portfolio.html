@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Muhammad Sarim — CS Student @ FAST</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #060810;
+    --bg2: #0b0f1a;
+    --surface: #111827;
+    --border: rgba(255,255,255,0.07);
+    --accent: #7c6bff;
+    --accent2: #ff6b9d;
+    --accent3: #00f5c4;
+    --text: #e8eaf6;
+    --muted: #6b7280;
+    --card: rgba(17,24,39,0.7);
+    --glow: rgba(124,107,255,0.15);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  #cursor {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed; top:0; left:0;
+    pointer-events: none;
+    z-index: 99999;
+    transition: transform 0.15s ease, background 0.2s;
+    transform: translate(-50%, -50%);
+  }
+  #cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid rgba(124,107,255,0.5);
+    border-radius: 50%;
+    position: fixed; top:0; left:0;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.35s cubic-bezier(.23,1,.32,1), width 0.3s, height 0.3s, border-color 0.3s;
+  }
+  body:has(a:hover) #cursor, body:has(button:hover) #cursor { transform: translate(-50%,-50%) scale(2.5); background: var(--accent2); }
+  body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 60px; height: 60px; border-color: var(--accent2); }
+
+  /* Noise overlay */
+  body::before {
+    content:'';
+    position: fixed; inset:0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity:0.4;
+  }
+
+  /* Gradient orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+    animation: orbFloat 12s ease-in-out infinite;
+  }
+  .orb1 { width:500px;height:500px;background:rgba(124,107,255,0.12);top:-100px;left:-150px;animation-delay:0s; }
+  .orb2 { width:400px;height:400px;background:rgba(255,107,157,0.08);bottom:10%;right:-100px;animation-delay:-4s; }
+  .orb3 { width:300px;height:300px;background:rgba(0,245,196,0.07);top:50%;left:40%;animation-delay:-8s; }
+  @keyframes orbFloat { 0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-40px) scale(1.05)} }
+
+  /* Nav */
+  nav {
+    position: fixed; top:0; left:0; right:0;
+    z-index: 500;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    backdrop-filter: blur(20px);
+    background: rgba(6,8,16,0.6);
+    border-bottom: 1px solid var(--border);
+    transition: padding 0.3s;
+  }
+  .nav-logo {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display:flex; gap:2.5rem; list-style:none; }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;
+    background:var(--accent);transform: scaleX(0);transition: transform 0.3s;
+  }
+  .nav-links a:hover { color:var(--text); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-cta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.6rem 1.4rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .nav-cta::before {
+    content:'';position:absolute;inset:0;
+    background:var(--accent);transform: translateX(-100%);transition: transform 0.3s;z-index:-1;
+  }
+  .nav-cta:hover { color: #fff; }
+  .nav-cta:hover::before { transform: translateX(0); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent3);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-tag::before { content:''; width:40px;height:1px;background:var(--accent3); }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(3.5rem, 9vw, 9rem);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin-bottom: 1rem;
+    opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-name .line1 { display:block; color: var(--text); }
+  .hero-name .line2 {
+    display:block;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+    color: transparent;
+    transition: all 0.3s;
+  }
+  .hero-name .line2:hover {
+    -webkit-text-stroke: 1px var(--accent);
+    color: transparent;
+  }
+
+  .hero-title {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    color: var(--muted);
+    margin-bottom: 2rem;
+    opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
+  }
+  .hero-title span { color: var(--accent2); font-style: normal; }
+
+  .hero-desc {
+    max-width: 580px;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1.2rem; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.8s 1s forwards;
+  }
+  .btn-primary {
+    padding: 1rem 2.2rem;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 0 30px rgba(124,107,255,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(124,107,255,0.5); }
+  .btn-secondary {
+    padding: 1rem 2.2rem;
+    border: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero-stats {
+    position: absolute; right:4rem; bottom: 4rem;
+    display: flex; flex-direction:column; gap: 2rem;
+    opacity: 0; animation: fadeUp 0.8s 1.2s forwards;
+  }
+  .stat { text-align:right; }
+  .stat-num { font-size: 2.5rem; font-weight:800; color: var(--text); line-height:1; }
+  .stat-num span { color: var(--accent); }
+  .stat-label {
+    font-family:'DM Mono',monospace;font-size:0.7rem;
+    color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.2rem;
+  }
+
+  .scroll-hint {
+    position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+    opacity:0;animation:fadeUp 0.8s 1.5s forwards;
+  }
+  .scroll-hint span { font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted); }
+  .scroll-line { width:1px;height:60px;background:linear-gradient(to bottom, var(--accent), transparent);animation: scrollLine 2s ease-in-out infinite; }
+  @keyframes scrollLine { 0%,100%{transform:scaleY(1);opacity:1}50%{transform:scaleY(0.5);opacity:0.4} }
+
+  /* Marquee */
+  .marquee-section {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 1.2rem 0;
+    overflow: hidden;
+    position: relative; z-index:1;
+  }
+  .marquee-track {
+    display: flex; gap: 3rem;
+    animation: marquee 25s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family:'DM Mono',monospace;font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;
+    color:var(--muted);display:flex;align-items:center;gap:1.5rem;
+  }
+  .marquee-item::after { content:'◆'; color:var(--accent); font-size:0.5rem; }
+  @keyframes marquee { from{transform:translateX(0)}to{transform:translateX(-50%)} }
+
+  /* SECTIONS */
+  section { position:relative;z-index:1; }
+  .section-header { display:flex;align-items:center;gap:1.5rem;margin-bottom:4rem; }
+  .section-num { font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--accent);letter-spacing:0.1em; }
+  .section-title { font-size:clamp(2rem,4vw,3.5rem);font-weight:800;letter-spacing:-0.03em;line-height:1; }
+  .section-line { flex:1;height:1px;background:var(--border); }
+
+  /* ABOUT */
+  #about { padding: 8rem 4rem; display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start; }
+  .about-text { font-size:1.1rem;line-height:1.9;color:var(--muted);margin-bottom:1.5rem; }
+  .about-text strong { color:var(--text); font-weight:600; }
+  .about-highlight {
+    font-family:'Instrument Serif',serif;font-style:italic;font-size:1.6rem;
+    color:var(--text);line-height:1.4;border-left:3px solid var(--accent);
+    padding-left:1.5rem;margin:2rem 0;
+  }
+  .info-grid { display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border); }
+  .info-cell { background:var(--bg);padding:1.5rem; }
+  .info-label { font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem; }
+  .info-value { font-size:0.95rem;color:var(--text);font-weight:500; }
+
+  /* SKILLS */
+  #skills { padding:8rem 4rem; background: var(--bg2); }
+  .skills-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem; }
+  .skill-card {
+    border:1px solid var(--border);padding:2rem;position:relative;overflow:hidden;
+    transition:border-color 0.3s, transform 0.3s;background: var(--card);backdrop-filter: blur(10px);
+  }
+  .skill-card::before {
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    transform:scaleX(0);transform-origin:left;transition:transform 0.4s;
+  }
+  .skill-card:hover { border-color:rgba(124,107,255,0.3);transform:translateY(-4px); }
+  .skill-card:hover::before { transform:scaleX(1); }
+  .skill-icon { font-size:2rem;margin-bottom:1rem;display:block; }
+  .skill-name { font-size:1.1rem;font-weight:700;margin-bottom:0.5rem; }
+  .skill-desc { font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted);line-height:1.6; }
+  .skill-level { margin-top:1.5rem;height:2px;background:var(--border);position:relative; }
+  .skill-bar {
+    height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
+    position:relative;transition: width 1.5s cubic-bezier(.23,1,.32,1);
+  }
+  .skill-bar::after {
+    content:'';position:absolute;right:0;top:-3px;width:8px;height:8px;border-radius:50%;
+    background:var(--accent2);box-shadow:0 0 8px var(--accent2);
+  }
+  .skill-pct { position:absolute;right:0;top:-20px;font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--accent); }
+
+  /* PROJECTS */
+  #projects { padding:8rem 4rem; }
+  .projects-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem; }
+  .project-card {
+    border:1px solid var(--border);overflow:hidden;position:relative;
+    transition:all 0.4s cubic-bezier(.23,1,.32,1);background:var(--card);backdrop-filter:blur(10px);
+  }
+  .project-card:hover { border-color:rgba(124,107,255,0.4); transform:translateY(-6px); box-shadow:0 30px 60px rgba(0,0,0,0.4); }
+  .project-header { padding:2rem 2rem 0;display:flex;justify-content:space-between;align-items:flex-start; }
+  .project-num { font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;color:var(--accent); }
+  .project-links { display:flex;gap:0.8rem; }
+  .project-link {
+    width:36px;height:36px;border:1px solid var(--border);display:flex;align-items:center;
+    justify-content:center;color:var(--muted);text-decoration:none;transition:all 0.3s;font-size:0.9rem;
+  }
+  .project-link:hover { border-color:var(--accent);color:var(--accent); }
+  .project-body { padding:1.5rem 2rem 2rem; }
+  .project-name { font-size:1.35rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:0.8rem;line-height:1.2; }
+  .project-desc { font-size:0.9rem;line-height:1.7;color:var(--muted);margin-bottom:1.5rem; }
+  .project-tags { display:flex;flex-wrap:wrap;gap:0.5rem; }
+  .tag {
+    font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.08em;
+    padding:0.3rem 0.8rem;border:1px solid var(--border);color:var(--muted);text-transform:uppercase;transition:all 0.2s;
+  }
+  .project-card:hover .tag { border-color:rgba(124,107,255,0.3);color:var(--accent); }
+  .project-visual { height:180px;position:relative;overflow:hidden;margin:0; }
+  .project-bg {
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:5rem;opacity:0.15;transition:opacity 0.3s,transform 0.3s;
+  }
+  .project-card:hover .project-bg { opacity:0.25;transform:scale(1.1); }
+  .proj-game  { background:linear-gradient(135deg,#1a0533,#2d1b69); }
+  .proj-buzz  { background:linear-gradient(135deg,#0d1a00,#1e3a00); }
+  .proj-bird  { background:linear-gradient(135deg,#001533,#002d5c); }
+  .proj-network { background:linear-gradient(135deg,#001a2e,#0d3b5c); }
+  .proj-city  { background:linear-gradient(135deg,#001a10,#0d3b27); }
+  .proj-asm   { background:linear-gradient(135deg,#1a0e00,#3b2a0d); }
+  .proj-calc  { background:linear-gradient(135deg,#1a001a,#3b0d2a); }
+  .proj-mario { background:linear-gradient(135deg,#1a0800,#3b1a0d); }
+  .proj-code-overlay {
+    position:absolute;inset:0;padding:1.5rem;font-family:'DM Mono',monospace;
+    font-size:0.65rem;color:rgba(255,255,255,0.15);line-height:1.6;overflow:hidden;user-select:none;
+  }
+
+  /* EDUCATION */
+  #education { padding:8rem 4rem; background:var(--bg2); }
+  .edu-timeline { position:relative; }
+  .edu-timeline::before {
+    content:'';position:absolute;left:0;top:0;bottom:0;
+    width:1px;background:linear-gradient(to bottom,var(--accent),transparent);
+  }
+  .edu-item { padding:0 0 4rem 3rem;position:relative;opacity:0;transform:translateX(-20px);transition:all 0.6s; }
+  .edu-item.visible { opacity:1;transform:translateX(0); }
+  .edu-dot { position:absolute;left:-5px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 20px var(--accent); }
+  .edu-period { font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;color:var(--accent);margin-bottom:0.5rem; }
+  .edu-degree { font-size:1.5rem;font-weight:800;margin-bottom:0.3rem; }
+  .edu-school { font-size:0.9rem;color:var(--muted);margin-bottom:1rem; }
+  .edu-badges { display:flex;flex-wrap:wrap;gap:0.6rem; }
+  .badge { font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.08em;padding:0.4rem 1rem;text-transform:uppercase;border-radius:0; }
+  .badge-gold   { background:rgba(255,196,0,0.1);color:#ffc400;border:1px solid rgba(255,196,0,0.3); }
+  .badge-purple { background:rgba(124,107,255,0.1);color:var(--accent);border:1px solid rgba(124,107,255,0.3); }
+  .badge-green  { background:rgba(0,245,196,0.1);color:var(--accent3);border:1px solid rgba(0,245,196,0.3); }
+
+  /* ACHIEVEMENTS */
+  #achievements { padding:8rem 4rem; }
+  .ach-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem; }
+  .ach-card { padding:2.5rem;border:1px solid var(--border);background:var(--card);position:relative;overflow:hidden;transition:all 0.3s; }
+  .ach-card:hover { border-color:rgba(255,196,0,0.3);transform:translateY(-3px); }
+  .ach-card::after {
+    content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,#ffc400,transparent);opacity:0;transition:opacity 0.3s;
+  }
+  .ach-card:hover::after { opacity:1; }
+  .ach-icon { font-size:2.5rem;margin-bottom:1.2rem;display:block; }
+  .ach-title { font-size:1.1rem;font-weight:700;margin-bottom:0.5rem; }
+  .ach-desc { font-size:0.85rem;color:var(--muted);line-height:1.6; }
+
+  /* CONTACT */
+  #contact { padding:8rem 4rem; background:var(--bg2); }
+  .contact-grid { display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start; }
+  .contact-left .big-text { font-size:clamp(2.5rem,5vw,5rem);font-weight:800;letter-spacing:-0.04em;line-height:0.95;margin-bottom:2rem; }
+  .contact-left .big-text span { color:var(--accent); }
+  .contact-left p { color:var(--muted);line-height:1.8;font-size:1rem; }
+  .contact-links { margin-top:3rem;display:flex;flex-direction:column;gap:1rem; }
+  .contact-link {
+    display:flex;align-items:center;gap:1rem;text-decoration:none;
+    padding:1.2rem 1.5rem;border:1px solid var(--border);color:var(--text);
+    transition:all 0.3s;position:relative;overflow:hidden;
+  }
+  .contact-link::before {
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg,rgba(124,107,255,0.05),transparent);
+    transform:translateX(-100%);transition:transform 0.3s;
+  }
+  .contact-link:hover { border-color:rgba(124,107,255,0.4); }
+  .contact-link:hover::before { transform:translateX(0); }
+  .contact-link-icon { font-size:1.2rem;width:24px;text-align:center; }
+  .contact-link-info { flex:1; }
+  .contact-link-label { font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.2rem; }
+  .contact-link-val { font-size:0.9rem;color:var(--text); }
+  .contact-arrow { color:var(--muted);transition:transform 0.3s; }
+  .contact-link:hover .contact-arrow { transform:translateX(4px); }
+
+  /* Footer */
+  footer { padding:3rem 4rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1; }
+  .footer-copy { font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.05em; }
+  .footer-badge { font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.05em;display:flex;align-items:center;gap:0.5rem; }
+  .footer-dot { width:6px;height:6px;border-radius:50%;background:var(--accent3);animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,245,196,0.4)}50%{box-shadow:0 0 0 6px rgba(0,245,196,0)} }
+
+  /* Animations */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)} }
+  .reveal { opacity:0;transform:translateY(40px);transition:opacity 0.7s, transform 0.7s; }
+  .reveal.visible { opacity:1;transform:translateY(0); }
+
+  /* Glitch */
+  .glitch { position:relative; }
+  .glitch:hover::before {
+    content:attr(data-text);position:absolute;left:2px;top:0;
+    color:var(--accent2);clip:rect(0,900px,0,0);animation:glitch1 0.4s infinite linear alternate-reverse;
+  }
+  .glitch:hover::after {
+    content:attr(data-text);position:absolute;left:-2px;top:0;
+    color:var(--accent3);clip:rect(0,900px,0,0);animation:glitch2 0.4s infinite linear alternate-reverse;
+  }
+  @keyframes glitch1{0%{clip:rect(20px,9999px,40px,0)}20%{clip:rect(70px,9999px,90px,0)}40%{clip:rect(10px,9999px,30px,0)}60%{clip:rect(60px,9999px,80px,0)}80%{clip:rect(40px,9999px,60px,0)}100%{clip:rect(5px,9999px,25px,0)}}
+  @keyframes glitch2{0%{clip:rect(50px,9999px,70px,0)}20%{clip:rect(15px,9999px,35px,0)}40%{clip:rect(80px,9999px,100px,0)}60%{clip:rect(25px,9999px,45px,0)}80%{clip:rect(65px,9999px,85px,0)}100%{clip:rect(45px,9999px,65px,0)}}
+
+  /* Mobile */
+  @media(max-width:768px){
+    nav{padding:1rem 1.5rem;} .nav-links{display:none;}
+    #hero{padding:7rem 1.5rem 4rem;}
+    .hero-stats{position:static;flex-direction:row;margin-top:3rem;}
+    .hero-stats .stat{text-align:left;}
+    #about{grid-template-columns:1fr;gap:3rem;padding:5rem 1.5rem;}
+    #skills,#projects,#achievements{padding:5rem 1.5rem;}
+    #education,#contact{padding:5rem 1.5rem;}
+    .contact-grid{grid-template-columns:1fr;gap:3rem;}
+    footer{flex-direction:column;gap:1rem;text-align:center;padding:2rem 1.5rem;}
+    .projects-grid{grid-template-columns:1fr;}
+  }
+
+  /* Loading screen */
+  #loader { position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;transition:opacity 0.5s,visibility 0.5s; }
+  #loader.hidden{opacity:0;visibility:hidden;}
+  .loader-name { font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:-0.02em;color:var(--text); }
+  .loader-bar-wrap { width:200px;height:1px;background:var(--border);position:relative;overflow:hidden; }
+  .loader-bar { position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));animation:loadBar 1.5s cubic-bezier(.23,1,.32,1) forwards; }
+  @keyframes loadBar{from{width:0}to{width:100%}}
+  .loader-pct { font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted); }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-name">MS</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-pct" id="loaderPct">0%</div>
+</div>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">M.<span>Sarim</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://github.com/Sarim0668" target="_blank" class="nav-cta">GitHub ↗</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-tag">Available for internships · 2026</div>
+  <h1 class="hero-name">
+    <span class="line1 glitch" data-text="Muhammad">Muhammad</span>
+    <span class="line2">Sarim</span>
+  </h1>
+  <p class="hero-title">Computer Science Engineer <span>@ FAST University</span></p>
+  <p class="hero-desc">
+    Building complex systems from game engines to smart city simulations.
+    From SFML shooters and Flappy Bird clones to x86 Assembly platformers and
+    economic graph networks — I ship real, working software. CGPA 3.69 · Dean's List × 3.
+  </p>
+  <div class="hero-actions">
+    <a href="#projects" class="btn-primary">View Projects</a>
+    <a href="#contact" class="btn-secondary">Get in Touch</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">3.69<span>/4</span></div>
+      <div class="stat-label">CGPA</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3<span>×</span></div>
+      <div class="stat-label">Dean's List</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">6<span>+</span></div>
+      <div class="stat-label">Projects</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marquee">
+    <span class="marquee-item">C++</span>
+    <span class="marquee-item">Data Structures</span>
+    <span class="marquee-item">x86 Assembly</span>
+    <span class="marquee-item">Algorithms</span>
+    <span class="marquee-item">SFML Game Dev</span>
+    <span class="marquee-item">MySQL</span>
+    <span class="marquee-item">Python</span>
+    <span class="marquee-item">Graph Theory</span>
+    <span class="marquee-item">OOP</span>
+    <span class="marquee-item">Proteus</span>
+    <span class="marquee-item">Digital Logic</span>
+    <span class="marquee-item">System Design</span>
+    <span class="marquee-item">C++</span>
+    <span class="marquee-item">Data Structures</span>
+    <span class="marquee-item">x86 Assembly</span>
+    <span class="marquee-item">Algorithms</span>
+    <span class="marquee-item">SFML Game Dev</span>
+    <span class="marquee-item">MySQL</span>
+    <span class="marquee-item">Python</span>
+    <span class="marquee-item">Graph Theory</span>
+    <span class="marquee-item">OOP</span>
+    <span class="marquee-item">Proteus</span>
+    <span class="marquee-item">Digital Logic</span>
+    <span class="marquee-item">System Design</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-left">
+    <div class="section-header reveal">
+      <span class="section-num">01</span>
+      <h2 class="section-title">About</h2>
+      <div class="section-line"></div>
+    </div>
+    <p class="about-text reveal">
+      I'm a <strong>Computer Science student at FAST-NUCES Islamabad</strong>, currently in my 4th semester with a CGPA of 3.69. I've made the Dean's List every single semester so far — and I'm not stopping.
+    </p>
+    <blockquote class="about-highlight reveal">
+      "I don't just learn programming — I build things that push my limits."
+    </blockquote>
+    <p class="about-text reveal">
+      My GitHub tells the story: <strong>6 shipped projects</strong> across game development in C++ and SFML, low-level x86 Assembly platformers, smart city simulations using complex data structures, digital logic circuits in Proteus, and mathematical network analysis using graph theory.
+    </p>
+    <p class="about-text reveal">
+      Currently exploring <strong>modern web technologies</strong>, system design patterns, and preparing for global remote internships. Based in Islamabad, open to opportunities worldwide.
+    </p>
+  </div>
+  <div class="about-right reveal">
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-label">University</div>
+        <div class="info-value">FAST-NUCES</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Degree</div>
+        <div class="info-value">BS Computer Science</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">CGPA</div>
+        <div class="info-value">3.69 / 4.0</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Semester</div>
+        <div class="info-value">4th (2024–2028)</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Location</div>
+        <div class="info-value">Islamabad, Pakistan</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Status</div>
+        <div class="info-value">Open to Intern</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Languages</div>
+        <div class="info-value">English · Urdu</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Focus</div>
+        <div class="info-value">Systems & Algorithms</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div style="max-width:100%;">
+    <div class="section-header reveal">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Tech Skills</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">⚡</span>
+        <div class="skill-name">C++</div>
+        <div class="skill-desc">Core language · OOP · STL · Memory management · Game loops · Multi-project experience</div>
+        <div class="skill-level">
+          <div class="skill-bar" style="width:0%" data-width="92%"></div>
+          <span class="skill-pct">92%</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">🔩</span>
+        <div class="skill-name">x86 Assembly</div>
+        <div class="skill-desc">Registers · Stack frames · Interrupts · Proteus simulation · Real-time graphics</div>
+        <div class="skill-level">
+          <div class="skill-bar" style="width:0%" data-width="78%"></div>
+          <span class="skill-pct">78%</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">🎮</span>
+        <div class="skill-name">SFML</div>
+        <div class="skill-desc">2D graphics · Sprite animation · Collision detection · Sound · Multi-level game design</div>
+        <div class="skill-level">
+          <div class="skill-bar" style="width:0%" data-width="85%"></div>
+          <span class="skill-pct">85%</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">🧠</span>
+        <div class="skill-name">Data Structures</div>
+        <div class="skill-desc">Trees · Heaps · Hash tables · Graphs · Priority queues · Custom implementations</div>
+        <div class="skill-level">
+          <div class="skill-bar" style="width:0%" data-width="88%"></div>
+          <span class="skill-pct">88%</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">🗺️</span>
+        <div class="skill-name">Algorithms</div>
+        <div class="skill-desc">Dijkstra · BFS · DFS · Sorting · Cosine similarity · Centrality measures</div>
+        <div class="skill-level">
+          <div class="skill-bar" style="width:0%" data-width="85%"></div>
+          <span class="skill-pct">85%</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">📐</span>
+        <div class="skill-name">OOP & Design</div>
+        <div class="skill-desc">Encapsulation · Inheritance · Polymorphism · Design patterns · Multi-class architectures</div>
+        <div class="skill-level">
+          <div class="skill-bar" style="width:0%" data-width="90%"></div>
+          <span class="skill-pct">90%</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">🔌</span>
+        <div class="skill-name">Digital Logic / Proteus</div>
+        <div class="skill-desc">Logic gates · ICs · Binary arithmetic · Circuit simulation · 4-bit & 8-bit designs</div>
+        <div class="skill-level">
+          <div class="skill-bar" style="width:0%" data-width="74%"></div>
+          <span class="skill-pct">74%</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">🗄️</span>
+        <div class="skill-name">MySQL</div>
+        <div class="skill-desc">Relational databases · Complex queries · Schema design · Joins · CSV integration</div>
+        <div class="skill-level">
+          <div class="skill-bar" style="width:0%" data-width="70%"></div>
+          <span class="skill-pct">70%</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">🐍</span>
+        <div class="skill-name">Python</div>
+        <div class="skill-desc">Scripting · Network analysis · Cosine similarity · Data processing · Automation</div>
+        <div class="skill-level">
+          <div class="skill-bar" style="width:0%" data-width="72%"></div>
+          <span class="skill-pct">72%</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">📊</span>
+        <div class="skill-name">Graph Theory</div>
+        <div class="skill-desc">Weighted graphs · Centrality · Partial orders · Adjacency structures · Network modeling</div>
+        <div class="skill-level">
+          <div class="skill-bar" style="width:0%" data-width="80%"></div>
+          <span class="skill-pct">80%</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Projects</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="projects-grid">
+
+    <!-- 1. Sonic OOP Game -->
+    <div class="project-card reveal">
+      <div class="project-visual proj-game">
+        <div class="project-bg">🦔</div>
+        <div class="proj-code-overlay">class Sonic : public Player {<br>&nbsp;&nbsp;void shoot();<br>&nbsp;&nbsp;void checkCollision();<br>&nbsp;&nbsp;int score, lives;<br>};</div>
+      </div>
+      <div class="project-header">
+        <span class="project-num">01 — OOP · Game Dev</span>
+        <div class="project-links">
+          <a href="https://github.com/Sarim0668/sonic-hedgehog-oop-game" target="_blank" class="project-link" title="View on GitHub">↗</a>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-name">Sonic Hedgehog Shooter</h3>
+        <p class="project-desc">Full 2D shooter built as a 2nd semester OOP final project. Features enemy AI, collision detection, shooting mechanics, multi-level gameplay, sprite animations, textures, and sound effects — built entirely from scratch using OOP principles.</p>
+        <div class="project-tags">
+          <span class="tag">C++</span>
+          <span class="tag">SFML</span>
+          <span class="tag">OOP</span>
+          <span class="tag">Enemy AI</span>
+          <span class="tag">Game Dev</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Buzz Bombers -->
+    <div class="project-card reveal">
+      <div class="project-visual proj-buzz">
+        <div class="project-bg">🐝</div>
+        <div class="proj-code-overlay">void spawnWave(int level) {<br>&nbsp;&nbsp;for(auto& b : bombers)<br>&nbsp;&nbsp;&nbsp;&nbsp;b.setSpeed(lvl);<br>&nbsp;&nbsp;render();<br>}</div>
+      </div>
+      <div class="project-header">
+        <span class="project-num">02 — Game Dev · PF</span>
+        <div class="project-links">
+          <a href="https://github.com/Sarim0668/Buzz-Bombers---PF" target="_blank" class="project-link" title="View on GitHub">↗</a>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-name">Buzz Bombers</h3>
+        <p class="project-desc">Classic arcade-style Buzz Bombers game built in C++ as a 1st semester Programming Fundamentals project. Demonstrates foundational game loop design, input handling, and graphics rendering — the project that started it all.</p>
+        <div class="project-tags">
+          <span class="tag">C++</span>
+          <span class="tag">SFML</span>
+          <span class="tag">Arcade</span>
+          <span class="tag">Game Loop</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Flappy Bird -->
+    <div class="project-card reveal">
+      <div class="project-visual proj-bird">
+        <div class="project-bg">🐦</div>
+        <div class="proj-code-overlay">void applyGravity() {<br>&nbsp;&nbsp;velocity += GRAVITY;<br>&nbsp;&nbsp;bird.y += velocity;<br>&nbsp;&nbsp;if(collide()) die();<br>}</div>
+      </div>
+      <div class="project-header">
+        <span class="project-num">03 — Personal Project</span>
+        <div class="project-links">
+          <a href="https://github.com/Sarim0668/Flappy-Bird" target="_blank" class="project-link" title="View on GitHub">↗</a>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-name">Flappy Bird Clone</h3>
+        <p class="project-desc">A faithful Flappy Bird side-scrolling clone built in C++ and SFML as a self-initiated personal learning project. Implements gravity physics, pipe generation, score tracking, and responsive collision — demonstrating independent learning drive beyond coursework.</p>
+        <div class="project-tags">
+          <span class="tag">C++</span>
+          <span class="tag">SFML</span>
+          <span class="tag">Physics</span>
+          <span class="tag">Side-Scroller</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Smart City -->
+    <div class="project-card reveal">
+      <div class="project-visual proj-city">
+        <div class="project-bg">🏙️</div>
+        <div class="proj-code-overlay">dijkstra(src, dest);<br>heapify(hospitals);<br>hashmap.insert(<br>&nbsp;&nbsp;school, data<br>);<br>// CSV data loaded</div>
+      </div>
+      <div class="project-header">
+        <span class="project-num">04 — Data Structures · DS Project</span>
+        <div class="project-links">
+          <a href="https://github.com/Sarim0668/smartcity-cpp-graphs-heaps-hashtables-DS-PROJECT-" target="_blank" class="project-link" title="View on GitHub">↗</a>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-name">Smart City Management System</h3>
+        <p class="project-desc">Large-scale C++ simulation modeling transport, healthcare, pharmacies, bus stops, and population data loaded from CSV files. Implements Dijkstra shortest-path, BFS traversal, custom heaps, hash tables, and trees for real-world city infrastructure logic.</p>
+        <div class="project-tags">
+          <span class="tag">C++</span>
+          <span class="tag">Dijkstra</span>
+          <span class="tag">BFS</span>
+          <span class="tag">Heaps</span>
+          <span class="tag">Hash Tables</span>
+          <span class="tag">CSV</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Treasure Hunter Mario ASM -->
+    <div class="project-card reveal">
+      <div class="project-visual proj-mario">
+        <div class="project-bg">🍄</div>
+        <div class="proj-code-overlay">MOV AX, player.x<br>CMP AX, coin.x<br>JE collect_coin<br>CALL draw_scene<br>PUSH level_data</div>
+      </div>
+      <div class="project-header">
+        <span class="project-num">05 — Low-Level · Assembly</span>
+        <div class="project-links">
+          <a href="https://github.com/Sarim0668/-Treasure-Hunter-Mario-Blue-Shirt-Edition-3-Rounds-" target="_blank" class="project-link" title="View on GitHub">↗</a>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-name">Treasure Hunter Mario (x86 ASM)</h3>
+        <p class="project-desc">A complete x86 Assembly console platformer with 3 levels × 3 scenes each. Control blue-shirt Mario collecting coins, stomping enemies, and using power-ups. Built entirely in assembly — demonstrating elite systems-level knowledge including registers, interrupts, and real-time rendering.</p>
+        <div class="project-tags">
+          <span class="tag">x86 ASM</span>
+          <span class="tag">Platformer</span>
+          <span class="tag">3 Levels</span>
+          <span class="tag">Low-Level</span>
+          <span class="tag">Interrupts</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. 8-and-4-bit Calculator -->
+    <div class="project-card reveal">
+      <div class="project-visual proj-calc">
+        <div class="project-bg">🔌</div>
+        <div class="proj-code-overlay">// 4-bit adder circuit<br>// Full adder ICs<br>// XOR gate subtraction<br>// Proteus simulation<br>// Binary I/O display</div>
+      </div>
+      <div class="project-header">
+        <span class="project-num">06 — Digital Logic · Hardware</span>
+        <div class="project-links">
+          <a href="https://github.com/Sarim0668/8-and-4-bit-Calculator" target="_blank" class="project-link" title="View on GitHub">↗</a>
+        </div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-name">8 & 4-bit Digital Calculator</h3>
+        <p class="project-desc">A digital calculator circuit built using logic gates and ICs in Proteus. Supports binary addition and subtraction for both 4-bit and 8-bit numbers. Demonstrates understanding of digital logic, combinational circuits, and hardware-level computation — going beyond pure software.</p>
+        <div class="project-tags">
+          <span class="tag">Proteus</span>
+          <span class="tag">Logic Gates</span>
+          <span class="tag">Digital Logic</span>
+          <span class="tag">ICs</span>
+          <span class="tag">Binary Arithmetic</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-header reveal">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Education</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="edu-timeline">
+    <div class="edu-item">
+      <div class="edu-dot"></div>
+      <div class="edu-period">2024 — 2028 · Currently 4th Semester</div>
+      <div class="edu-degree">Bachelor of Computer Science</div>
+      <div class="edu-school">FAST National University of Computer and Emerging Sciences, Islamabad</div>
+      <div class="edu-badges">
+        <span class="badge badge-gold">⭐ CGPA 3.69 / 4.0</span>
+        <span class="badge badge-purple">🏆 Dean's List S1</span>
+        <span class="badge badge-purple">🏆 Dean's List S2</span>
+        <span class="badge badge-purple">🏆 Dean's List S3</span>
+        <span class="badge badge-green">In Progress</span>
+      </div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-dot" style="background:var(--accent2);box-shadow:0 0 20px var(--accent2)"></div>
+      <div class="edu-period">2020 — 2024</div>
+      <div class="edu-degree">O Level & A Level</div>
+      <div class="edu-school">The City School, Pakistan</div>
+      <div class="edu-badges">
+        <span class="badge badge-gold">📘 A Level: A (All Subjects)</span>
+        <span class="badge badge-purple">🔬 O Level: Bio A*</span>
+        <span class="badge badge-purple">📐 O Level: Math A*</span>
+        <span class="badge badge-purple">🧪 O Level: Chem A</span>
+        <span class="badge badge-purple">⚡ O Level: Phy A</span>
+        <span class="badge badge-purple">📖 O Level: Eng B</span>
+        <span class="badge badge-purple">🏛️ O Level: Pst A</span>
+        <span class="badge badge-purple">🕋 O Level: Isl A*</span>
+        <span class="badge badge-purple">🗣️ O Level: Urdu A*</span>
+        <span class="badge badge-green">Completed</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="section-header reveal">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Achievements</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="ach-grid">
+    <div class="ach-card reveal">
+      <span class="ach-icon">🏆</span>
+      <div class="ach-title">Dean's List × 3 Semesters</div>
+      <div class="ach-desc">Achieved Dean's List recognition consecutively in all first three semesters of BS CS at FAST-NUCES — a record of unbroken academic excellence at one of Pakistan's most competitive CS programs.</div>
+    </div>
+    <div class="ach-card reveal">
+      <span class="ach-icon">📊</span>
+      <div class="ach-title">3.69 CGPA at FAST</div>
+      <div class="ach-desc">Maintained a strong cumulative GPA balancing rigorous coursework in algorithms, data structures, digital logic, and OOP — while simultaneously shipping 6 real projects to GitHub.</div>
+    </div>
+    <div class="ach-card reveal">
+      <span class="ach-icon">🎮</span>
+      <div class="ach-title">3 Games Shipped in C++</div>
+      <div class="ach-desc">Built three complete games — Sonic Shooter, Buzz Bombers, and Flappy Bird — each from scratch using C++ and SFML, demonstrating consistent game development execution across semesters.</div>
+    </div>
+    <div class="ach-card reveal">
+      <span class="ach-icon">🍄</span>
+      <div class="ach-title">Full Platformer in x86 Assembly</div>
+      <div class="ach-desc">Wrote a 3-level Mario platformer entirely in x86 Assembly — 3 levels × 3 scenes, with enemy collision, coin collection, and power-ups. A feat rare among undergraduate students globally.</div>
+    </div>
+    <div class="ach-card reveal">
+      <span class="ach-icon">🏙️</span>
+      <div class="ach-title">Smart City Simulation</div>
+      <div class="ach-desc">Engineered a large-scale city management system loading real CSV data across transport, healthcare, and education domains — demonstrating mastery of graphs, heaps, hash tables, and Dijkstra at scale.</div>
+    </div>
+    <div class="ach-card reveal">
+      <span class="ach-icon">🔌</span>
+      <div class="ach-title">Hardware Calculator in Proteus</div>
+      <div class="ach-desc">Designed and simulated an 8-bit and 4-bit binary calculator using logic gates and ICs — bridging software knowledge with low-level digital hardware design, going beyond what most CS peers attempt.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-left reveal">
+      <div class="big-text">Let's<br><span>Work</span><br>Together.</div>
+      <p>I'm actively looking for remote internship opportunities globally. Whether it's software engineering, game development, backend systems, or algorithms — I'm ready to contribute and grow. 6 shipped projects, 3 Dean's Lists. Let's talk.</p>
+      <div class="contact-links">
+        <a href="mailto:muhammedsarim125@gmail.com" class="contact-link">
+          <span class="contact-link-icon">✉️</span>
+          <div class="contact-link-info">
+            <div class="contact-link-label">Email</div>
+            <div class="contact-link-val">muhammedsarim125@gmail.com</div>
+          </div>
+          <span class="contact-arrow">→</span>
+        </a>
+        <a href="tel:+923047880218" class="contact-link">
+          <span class="contact-link-icon">📞</span>
+          <div class="contact-link-info">
+            <div class="contact-link-label">Phone</div>
+            <div class="contact-link-val">+92 304 788 0218</div>
+          </div>
+          <span class="contact-arrow">→</span>
+        </a>
+        <a href="https://github.com/Sarim0668" target="_blank" class="contact-link">
+          <span class="contact-link-icon">🐙</span>
+          <div class="contact-link-info">
+            <div class="contact-link-label">GitHub</div>
+            <div class="contact-link-val">github.com/Sarim0668</div>
+          </div>
+          <span class="contact-arrow">→</span>
+        </a>
+        <a href="https://www.linkedin.com/in/muhammad-sarim-8b3296338/" target="_blank" class="contact-link">
+          <span class="contact-link-icon">💼</span>
+          <div class="contact-link-info">
+            <div class="contact-link-label">LinkedIn</div>
+            <div class="contact-link-val">Muhammad Sarim</div>
+          </div>
+          <span class="contact-arrow">→</span>
+        </a>
+      </div>
+    </div>
+    <div class="contact-right reveal" style="display:flex;flex-direction:column;gap:1.5rem;padding-top:1rem;">
+      <div style="border:1px solid var(--border);padding:2.5rem;background:var(--card);">
+        <div style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;">Quick Info</div>
+        <div style="display:flex;flex-direction:column;gap:1.2rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:1rem;">
+            <span style="font-size:0.85rem;color:var(--muted);">Availability</span>
+            <span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--accent3);">· Open to Intern</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:1rem;">
+            <span style="font-size:0.85rem;color:var(--muted);">Work Type</span>
+            <span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--text);">Remote / Hybrid</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:1rem;">
+            <span style="font-size:0.85rem;color:var(--muted);">Timezone</span>
+            <span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--text);">PKT (UTC+5)</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.85rem;color:var(--muted);">Response Time</span>
+            <span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--text);">Within 24 hours</span>
+          </div>
+        </div>
+      </div>
+      <div style="border:1px solid var(--border);padding:2.5rem;background:var(--card);">
+        <div style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem;">Seeking Roles In</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.6rem;">
+          <span class="tag">Software Engineering</span>
+          <span class="tag">Game Development</span>
+          <span class="tag">Backend Dev</span>
+          <span class="tag">Systems Programming</span>
+          <span class="tag">Algorithm Engineering</span>
+          <span class="tag">C++ Development</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2025 Muhammad Sarim · All rights reserved</div>
+  <div class="footer-badge">
+    <div class="footer-dot"></div>
+    Available for remote internships
+  </div>
+</footer>
+
+<script>
+// Loader
+let pct = 0;
+const loaderPct = document.getElementById('loaderPct');
+const loaderInterval = setInterval(() => {
+  pct += Math.random() * 15;
+  if(pct >= 100) { pct = 100; clearInterval(loaderInterval); }
+  loaderPct.textContent = Math.floor(pct) + '%';
+  if(pct === 100) {
+    setTimeout(() => document.getElementById('loader').classList.add('hidden'), 300);
+  }
+}, 80);
+
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+function animateRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+// Reveal on scroll
+const revealEls = document.querySelectorAll('.reveal, .edu-item');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.classList.add('visible');
+      const bar = e.target.querySelector('.skill-bar');
+      if(bar) {
+        setTimeout(() => bar.style.width = bar.getAttribute('data-width'), 100);
+      }
+    }
+  });
+}, { threshold: 0.1 });
+revealEls.forEach(el => observer.observe(el));
+
+// Tilt effect on cards
+document.querySelectorAll('.project-card, .skill-card, .ach-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `translateY(-6px) rotateX(${-y*6}deg) rotateY(${x*6}deg)`;
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
+
+// Nav scroll effect
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  if(window.scrollY > 50) nav.style.padding = '0.8rem 4rem';
+  else nav.style.padding = '1.2rem 4rem';
+});
+</script>
+</body>
+</html>
